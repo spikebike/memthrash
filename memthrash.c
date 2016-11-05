@@ -7,6 +7,7 @@
 
 void * initAr(long long *a, int size)
 {
+	printf ("initializing 256MB i=%d\n",size);
 	for (int i=0; i<size; i++)
 	{
 		a[i]=1;
@@ -21,7 +22,7 @@ main (int argc, char *argv[])
 	long long sum;
 	char c;
 
-	while ((c = getopt (argc, argv, "g:")) != EOF)
+	while ((c = getopt (argc, argv, "g:i:")) != EOF)
 	{
 		switch (c) {
 			case 'g':
@@ -34,16 +35,24 @@ main (int argc, char *argv[])
 	}
 	for (int i=0; i< memCnt; i++)
 	{
-		printf ("Allocating 256MB\n");
 		bigAr[i]=malloc(ARRAYSIZE*sizeof(long long));
+		printf ("Allocating 256MB %d ptr=%p\n",i,bigAr[i]);
+		if (bigAr[i]==NULL) {
+			printf ("Malloc failed\n");
+		}
 		initAr(bigAr[i],ARRAYSIZE);
 	}
 	sum=0;
-	for (int i=0;i<iter; i++)
+	printf ("iter=%d size=%lu thrashing...\n",iter,ARRAYSIZE);
+ 	for (int k=0;k<iter; k++)
 	{
-		for (int j=0;j<iter; i++)
+		for (int i=0;i<memCnt; i++)
 		{
-			sum+=bigAr[i][j];
+			printf ("i=%d p=%p\n",i,bigAr[i]);
+			for (int j=0;j<ARRAYSIZE; j++)
+			{
+				sum+=bigAr[i][j];
+			}
 		}
 	}
 	printf ("sum=%lli\n",sum);
