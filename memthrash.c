@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-
+#include <getopt.h>
 
 #define ARRAYSIZE 256*1024*1024/sizeof(long long)
 
