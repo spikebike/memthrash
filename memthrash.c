@@ -25,12 +25,12 @@ second ()
         return ((double) tp.tv_sec + (double) tp.tv_usec * 1.e-6);
 }
 
-void help(char *argv[])
+void help(char *argv[],int memCnt,int iter)
 {
 	printf ("\nMemthrash - repeated read an N GB array\n\n");
    printf ("Usage: %s <options>\n",argv[0]);
-   printf ("  -i specify how many times to read the array, default 10\n");
-	printf ("  -g specify how large an array to use in GB, default 1\n");
+   printf ("  -i specify how many times to read the array, default %d\n",memCnt);
+	printf ("  -g specify how large an array to use in GB, default %d\n",iter);
 	printf ("  -h display help\n");
    printf ("\nIntended as a simple sanity benchmark, exercise swap, and \n");
 	printf ("debug various resident (RSS) vs virtual issues.\n\n");
@@ -56,11 +56,11 @@ main (int argc, char *argv[])
 				iter=atoi(optarg);
 			break;
 			case 'h':
-				help(argv);
+				help(argv,memCnt,iter);
 				exit(-1);
 			break;
 			case '?':
-				help(argv);
+				help(argv,memCnt,iter);
 				exit(-1);
 			break;
 		}
