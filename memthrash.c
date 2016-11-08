@@ -25,16 +25,28 @@ second ()
         return ((double) tp.tv_sec + (double) tp.tv_usec * 1.e-6);
 }
 
+void help(char *argv[])
+{
+	printf ("\nMemthrash - repeated read an N GB array\n\n");
+   printf ("Usage: %s <options>\n",argv[0]);
+   printf ("  -i specify how many times to read the array, default 10\n");
+	printf ("  -g specify how large an array to use in GB, default 1\n");
+	printf ("  -h display help\n");
+   printf ("\nIntended as a simple sanity benchmark, exercise swap, and \n");
+	printf ("debug various resident (RSS) vs virtual issues.\n\n");
+} 
+
 int
 main (int argc, char *argv[])
 {
-	int memCnt,iter;
 	long long *bigAr[4096]; // big enough for 1TB
 	long long sum;
 	char c;
 	double start,stop,interval,bandwidth;
+	int memCnt=4; // default to 1GB
+   int iter=10;  // default to 10 iterations	
 
-	while ((c = getopt (argc, argv, "g:i:")) != EOF)
+	while ((c = getopt (argc, argv, "?hg:i:")) != EOF)
 	{
 		switch (c) {
 			case 'g':
@@ -42,6 +54,14 @@ main (int argc, char *argv[])
 			break;
 			case 'i':
 				iter=atoi(optarg);
+			break;
+			case 'h':
+				help(argv);
+				exit(-1);
+			break;
+			case '?':
+				help(argv);
+				exit(-1);
 			break;
 		}
 	}
@@ -72,7 +92,6 @@ main (int argc, char *argv[])
 	stop=second();
 	interval=stop-start;
 	bandwidth=((double)iter*memCnt*ARRAYSIZE*sizeof(double))/(interval*pow(2,20));
-//	bandwidth=((double)iter*memCnt*ARRAYSIZE*sizeof(double))/(interval);	
 	if (sum == 23) {
 		printf ("making sure compiler doesn't cheat\n");
 	}
